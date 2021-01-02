@@ -31,7 +31,7 @@ func (s *Server) Start() error {
 
 	logrus.Info("server has started on port", s.config.Port)
 
-	return http.ListenAndServe(s.config.Port, s.router)
+	return http.ListenAndServe(":"+s.config.Port, s.router)
 }
 
 func (s *Server) configureLogger() error {
