@@ -1,13 +1,19 @@
 package server
 
-import "os"
+import (
+	"os"
 
+	"github.com/inctnce/quizard-api/internal/store"
+)
+
+// Config of the server
 type Config struct {
 	Port     string `toml:"PORT"`
 	LogLevel string `toml:"LOG_LEVEL"`
-	DBUrl    string `toml:"DB_URL"`
+	Store    *store.Config
 }
 
+// NewConfig returns new Config instance
 func NewConfig() *Config {
 
 	port := os.Getenv("PORT")
@@ -23,5 +29,6 @@ func NewConfig() *Config {
 	return &Config{
 		Port:     port,
 		LogLevel: logLevel,
+		Store:    store.NewConfig(),
 	}
 }
