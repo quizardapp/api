@@ -10,7 +10,7 @@ import (
 var ()
 
 func main() {
-	godotenv.Load()
+	godotenv.Load("config.env")
 	config := server.NewConfig()
 
 	s := server.New(config)
