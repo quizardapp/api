@@ -1,4 +1,4 @@
-module github.com/inctnce/quizard-api
+module github.com/quizardapp/auth-api
 
 go 1.15
 

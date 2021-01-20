@@ -1,20 +1,16 @@
 package main
 
 import (
-	"log"
+	log "github.com/sirupsen/logrus"
 
-	"github.com/inctnce/quizard-api/internal/server"
 	"github.com/joho/godotenv"
+	apiserver "github.com/quizardapp/auth-api/pkg/server"
 )
-
-var ()
 
 func main() {
 	godotenv.Load("config.env")
-	config := server.NewConfig()
 
-	s := server.New(config)
-	if err := s.Start(); err != nil {
+	if err := apiserver.Start(); err != nil {
 		log.Fatal(err)
 	}
 }
