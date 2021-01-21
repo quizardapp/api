@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/quizardapp/auth-api/pkg/store"
+	"github.com/quizardapp/auth-api/internal/store"
 	"github.com/sirupsen/logrus"
 
 	"github.com/gorilla/mux"

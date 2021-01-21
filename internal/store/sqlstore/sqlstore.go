@@ -3,7 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 
-	"github.com/quizardapp/auth-api/pkg/store"
+	"github.com/quizardapp/auth-api/internal/store"
 )
 
 type SQLStore struct {
@@ -11,7 +11,7 @@ type SQLStore struct {
 	userRepo *UserRepo
 }
 
-// 
+// New ...
 func New(db *sql.DB) *SQLStore {
 	return &SQLStore{
 		db: db,

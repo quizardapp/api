@@ -1,6 +1,6 @@
 package store
 
-import "github.com/quizardapp/auth-api/pkg/model"
+import "github.com/quizardapp/auth-api/internal/model"
 
 type UserRepo interface {
 	Create(*model.User) error

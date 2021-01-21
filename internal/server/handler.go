@@ -6,7 +6,7 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/quizardapp/auth-api/pkg/model"
+	"github.com/quizardapp/auth-api/internal/model"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -57,6 +57,10 @@ func (s *server) login() http.HandlerFunc {
 		Password string `json:"password"`
 	}
 
+	type response struct {
+		Token string `json:"token"`
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		req := &request{}
 		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
@@ -70,6 +74,19 @@ func (s *server) login() http.HandlerFunc {
 			s.error(w, r, http.StatusUnauthorized, errIncorrectEmailOrPassword)
 		}
 
-		s.respond(w, r, http.StatusOK, nil)
+		if err := u.GenerateJWT(); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		res := &response{u.JWT}
+
+		jsonRes, err := json.Marshal(res)
+		if err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		s.respond(w, r, http.StatusOK, jsonRes)
 	}
 }

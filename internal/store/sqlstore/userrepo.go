@@ -3,7 +3,7 @@ package sqlstore
 import (
 	"fmt"
 
-	"github.com/quizardapp/auth-api/pkg/model"
+	"github.com/quizardapp/auth-api/internal/model"
 )
 
 // UserRepo ...

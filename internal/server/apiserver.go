@@ -6,7 +6,7 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/quizardapp/auth-api/pkg/store/sqlstore"
+	"github.com/quizardapp/auth-api/internal/store/sqlstore"
 )
 
 func Start() error {
