@@ -2,15 +2,17 @@ package apiserver
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
-	"os/exec"
-	"time"
 
-	"github.com/quizardapp/auth-api/pkg/model"
 	"github.com/quizardapp/auth-api/pkg/store"
 	"github.com/sirupsen/logrus"
 
 	"github.com/gorilla/mux"
+)
+
+var (
+	errIncorrectEmailOrPassword = errors.New("Incorrect email or password")
 )
 
 type server struct {
@@ -36,37 +38,8 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) configureRouter() {
-	s.router.HandleFunc("/register", s.createUser())
-}
-
-func (s *server) createUser() http.HandlerFunc {
-
-	return func(w http.ResponseWriter, r *http.Request) {
-		req := &model.User{}
-		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-			s.error(w, r, http.StatusBadRequest, err)
-			return
-		}
-
-		uuid, _ := exec.Command("uuidgen").Output()
-
-		u := &model.User{
-			ID:           string(uuid),
-			Firstname:    req.Firstname,
-			Lastname:     req.Lastname,
-			Email:        req.Email,
-			Password:     req.Password,
-			CreationDate: time.Now(),
-		}
-
-		if err := s.store.User().Create(u); err != nil {
-			s.error(w, r, http.StatusUnprocessableEntity, err)
-			return
-		}
-
-		s.respond(w, r, http.StatusCreated, u)
-	}
-
+	s.router.HandleFunc("/register", s.register()).Methods("POST")
+	s.router.HandleFunc("/login", s.login()).Methods("POST")
 }
 
 func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err error) {

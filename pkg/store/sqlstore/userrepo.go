@@ -1,7 +1,6 @@
 package sqlstore
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/quizardapp/auth-api/pkg/model"
@@ -33,8 +32,9 @@ func (ur *UserRepo) FindByEmail(email string) (*model.User, error) {
 
 	u := model.User{}
 
-	if err := ur.store.db.QueryRow("SELECT * FROM users WHERE email={$1}", email).Scan(&u); err != nil {
-		return nil, errors.New("cannot find such user")
+	query := fmt.Sprintf("SELECT * FROM users WHERE email='%s'", email)
+	if err := ur.store.db.QueryRow(query).Scan(&u.ID, &u.Firstname, &u.Lastname, &u.Email, &u.Password, &u.CreationDate); err != nil {
+		return nil, err
 	}
 
 	return &u, nil

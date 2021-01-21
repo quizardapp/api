@@ -11,6 +11,7 @@ type SQLStore struct {
 	userRepo *UserRepo
 }
 
+// 
 func New(db *sql.DB) *SQLStore {
 	return &SQLStore{
 		db: db,
