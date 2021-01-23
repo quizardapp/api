@@ -1,6 +1,7 @@
 package sqlstore
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/quizardapp/auth-api/internal/model"
@@ -32,9 +33,11 @@ func (ur *UserRepo) FindByEmail(email string) (*model.User, error) {
 	u := model.User{}
 
 	query := fmt.Sprintf("SELECT * FROM users WHERE email='%s'", email)
-	if err := ur.store.db.QueryRow(query).Scan(&u.ID, &u.Firstname, &u.Lastname, &u.Email, &u.Password, &u.CreationDate); err != nil {
+	token := sql.NullString{}
+	if err := ur.store.db.QueryRow(query).Scan(&u.ID, &u.Firstname, &u.Lastname, &u.Email, &u.Password, &u.CreationDate, &token); err != nil {
 		return nil, err
 	}
+	u.RefreshToken = token.String
 
 	return &u, nil
 }
@@ -45,9 +48,11 @@ func (ur *UserRepo) FindByID(id string) (*model.User, error) {
 	u := model.User{}
 
 	query := fmt.Sprintf("SELECT * FROM users WHERE id='%s'", id)
-	if err := ur.store.db.QueryRow(query).Scan(&u.ID, &u.Firstname, &u.Lastname, &u.Email, &u.Password, &u.CreationDate); err != nil {
+	token := sql.NullString{}
+	if err := ur.store.db.QueryRow(query).Scan(&u.ID, &u.Firstname, &u.Lastname, &u.Email, &u.Password, &u.CreationDate, &token); err != nil {
 		return nil, err
 	}
+	u.RefreshToken = token.String
 
 	return &u, nil
 }
@@ -58,6 +63,6 @@ func (ur *UserRepo) UpdateToken(token string, id string) error {
 	if err := ur.store.db.QueryRow(query).Scan(); err != nil {
 		return err
 	}
-	
+
 	return nil
 }
