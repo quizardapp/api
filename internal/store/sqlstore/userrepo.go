@@ -52,7 +52,12 @@ func (ur *UserRepo) FindByID(id string) (*model.User, error) {
 	return &u, nil
 }
 
-// RefreshToken ...
-func (ur *UserRepo) RefreshToken(token string) (string, error) {
-	return "", nil
+func (ur *UserRepo) UpdateToken(token string, id string) error {
+
+	query := fmt.Sprintf("UPDATE users SET token='%s' WHERE id='%s'", token, id)
+	if err := ur.store.db.QueryRow(query).Scan(); err != nil {
+		return err
+	}
+	
+	return nil
 }
