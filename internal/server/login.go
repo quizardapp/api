@@ -2,7 +2,6 @@ package apiserver
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -44,8 +43,6 @@ func (s *server) login() http.HandlerFunc {
 		s.store.User().UpdateToken(u.RefreshToken, u.ID)
 
 		res := &response{u.RefreshToken, u.AccessToken}
-		fmt.Println(res.RefreshToken)
-		fmt.Println(res.AccessToken)
 
 		s.respond(w, r, http.StatusOK, res)
 	}
