@@ -18,9 +18,9 @@ func Start() error {
 	defer db.Close()
 	store := sqlstore.New(db)
 
-	srv := newServer(store)
+	server := newServer(store)
 
-	return http.ListenAndServe(":"+os.Getenv("PORT"), srv)
+	return http.ListenAndServe(":"+os.Getenv("PORT"), server)
 }
 
 func newDB() (*sql.DB, error) {
