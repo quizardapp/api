@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/quizardapp/auth-api/internal/model"
@@ -32,7 +33,7 @@ func (s *server) register() http.HandlerFunc {
 		}
 
 		u := &model.User{
-			ID:           string(uuid),
+			ID:           strings.TrimSuffix(string(uuid), "\n"),
 			Firstname:    req.Firstname,
 			Lastname:     req.Lastname,
 			Email:        req.Email,
