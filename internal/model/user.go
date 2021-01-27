@@ -41,7 +41,7 @@ func (u *User) GenerateToken(tokenType string) error {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["user_id"] = u.ID
 	if tokenType == "access" {
-		claims["exp"] = time.Now().Add(time.Second * 5).Unix()
+		claims["exp"] = time.Now().Add(time.Minute * 30).Unix()
 	}
 
 	secret := os.Getenv("TOKEN_SECRET")
