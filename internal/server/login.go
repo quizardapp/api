@@ -25,9 +25,10 @@ func (s *server) login() http.HandlerFunc {
 			return
 		}
 
-		u, err := s.store.User().FindByEmail(req.Email)
+		u, err := s.store.User().Find(req.Email, "email")
 		if err != nil || !u.ComparePassword(req.Password) {
 			s.error(w, r, http.StatusUnauthorized, errIncorrectEmailOrPassword)
+			return
 		}
 
 		if err := u.GenerateToken("refresh"); err != nil {
@@ -40,7 +41,7 @@ func (s *server) login() http.HandlerFunc {
 			return
 		}
 
-		s.store.User().UpdateToken(u.RefreshToken, u.ID)
+		s.store.User().Update(u.RefreshToken, "token", u.ID)
 
 		res := &response{u.RefreshToken, u.AccessToken}
 
