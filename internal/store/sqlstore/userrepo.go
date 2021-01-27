@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"sort"
 
 	"github.com/quizardapp/auth-api/internal/model"
 	"golang.org/x/crypto/bcrypt"
@@ -72,11 +71,6 @@ func (ur *UserRepo) Find(value string, field string) (*model.User, error) {
 
 // Update ...
 func (ur *UserRepo) Update(value string, field string, id string) error {
-
-	fields := []string{"firstname", "lastname", "email", "password", "token"}
-	if sort.SearchStrings(fields, field) == 5 {
-		return errors.New("undefined field")
-	}
 
 	if field == "password" {
 		byteValue, err := bcrypt.GenerateFromPassword([]byte(value), bcrypt.DefaultCost)

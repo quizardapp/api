@@ -1,4 +1,4 @@
-package apiserver
+package server
 
 import (
 	"database/sql"
