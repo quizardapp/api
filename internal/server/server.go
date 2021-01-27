@@ -40,8 +40,9 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (s *server) configureRouter() {
 	s.router.HandleFunc("/register", s.register()).Methods("POST")
 	s.router.HandleFunc("/login", s.login()).Methods("POST")
-	s.router.HandleFunc("/updatetoken", s.updateAccessToken()).Methods("POST")
+	s.router.HandleFunc("/token", s.updateAccessToken()).Methods("POST")
 	s.router.HandleFunc("/update", s.authenticate(s.updateUser())).Methods("POST")
+	s.router.HandleFunc("/get", s.authenticate(s.getUser())).Methods("POST")
 }
 
 func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err error) {

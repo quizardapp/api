@@ -31,8 +31,7 @@ func (ur *UserRepo) Create(u *model.User) error {
 
 	query := fmt.Sprintf(`
 		INSERT INTO users (id, firstname, lastname, email, password, creation_date, token) 
-		VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')
-						`,
+		VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')`,
 		u.ID, u.Firstname, u.Lastname, u.Email, u.Password, u.CreationDate, u.RefreshToken)
 	if _, err := ur.store.db.Exec(query); err != nil {
 		return err
