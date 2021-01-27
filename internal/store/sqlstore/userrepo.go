@@ -2,9 +2,12 @@ package sqlstore
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
+	"sort"
 
 	"github.com/quizardapp/auth-api/internal/model"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // UserRepo ...
@@ -39,13 +42,19 @@ func (ur *UserRepo) Create(u *model.User) error {
 	return nil
 }
 
-// FindByEmail ...
-func (ur *UserRepo) FindByEmail(email string) (*model.User, error) {
+// Find ...
+func (ur *UserRepo) Find(value string, field string) (*model.User, error) {
+
+	if field != "id" && field != "email" {
+		return nil, errors.New("undefined field")
+	}
 
 	u := model.User{}
 
-	query := fmt.Sprintf("SELECT * FROM users WHERE email='%s'", email)
+	query := fmt.Sprintf("SELECT * FROM users WHERE `%s`='%s'", field, value)
+
 	token := sql.NullString{}
+
 	if err := ur.store.db.QueryRow(query).Scan(
 		&u.ID,
 		&u.Firstname,
@@ -61,32 +70,24 @@ func (ur *UserRepo) FindByEmail(email string) (*model.User, error) {
 	return &u, nil
 }
 
-// FindByID ...
-func (ur *UserRepo) FindByID(id string) (*model.User, error) {
+// Update ...
+func (ur *UserRepo) Update(value string, field string, id string) error {
 
-	u := model.User{}
-
-	query := fmt.Sprintf("SELECT * FROM users WHERE id='%s'", id)
-	token := sql.NullString{}
-	if err := ur.store.db.QueryRow(query).Scan(
-		&u.ID,
-		&u.Firstname,
-		&u.Lastname,
-		&u.Email,
-		&u.Password,
-		&u.CreationDate,
-		&token); err != nil {
-		return nil, err
+	fields := []string{"firstname", "lastname", "email", "password", "token"}
+	if sort.SearchStrings(fields, field) == 5 {
+		return errors.New("undefined field")
 	}
-	u.RefreshToken = token.String
 
-	return &u, nil
-}
+	if field == "password" {
+		byteValue, err := bcrypt.GenerateFromPassword([]byte(value), bcrypt.DefaultCost)
+		if err != nil {
+			return err
+		}
+		value = string(byteValue)
+	}
 
-func (ur *UserRepo) UpdateToken(token string, id string) error {
-
-	query := fmt.Sprintf("UPDATE users SET token='%s' WHERE id='%s'", token, id)
-	if err := ur.store.db.QueryRow(query).Scan(); err != nil {
+	query := fmt.Sprintf("UPDATE users SET `%s`='%s' WHERE id='%s'", field, value, id)
+	if _, err := ur.store.db.Exec(query); err != nil {
 		return err
 	}
 
