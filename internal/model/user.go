@@ -10,6 +10,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// User ...
 type User struct {
 	ID           string    `json:"id" validate:"required"`
 	Firstname    string    `json:"firstname" validate:"required"`
@@ -63,6 +64,7 @@ func (u *User) GenerateToken(tokenType string) error {
 	return nil
 }
 
+// UpdateAccessToken ...
 func (u *User) UpdateAccessToken(refreshToken string) error {
 
 	if u.RefreshToken != refreshToken {
