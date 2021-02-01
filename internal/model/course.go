@@ -1,10 +1,21 @@
 package model
 
+import "github.com/go-playground/validator/v10"
+
 // Course ...
 type Course struct {
-	ID           string
-	Name         string
-	Description  string
-	UserID       string
-	CreationDate string
+	ID           string `json:"id" validate:"required"`
+	Name         string `json:"name" validate:"required"`
+	Description  string `json:"description"`
+	UserID       string `json:"user_id" validate:"required"`
+	CreationDate string `json:"creation_date" validate:"required"`
+}
+
+// Validate ...
+func (c *Course) Validate() error {
+
+	if err := validator.New().Struct(c); err != nil {
+		return err
+	}
+	return nil
 }
