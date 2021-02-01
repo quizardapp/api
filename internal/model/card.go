@@ -1,11 +1,12 @@
 package model
 
+import "time"
+
 // Card ...
 type Card struct {
-	Title  string
-	Text   string
-	Images []string
-	Author string
-	Module string
+	Name         string
+	Content      string
+	UserID       string
+	ModuleID     string
+	CreationDate time.Time
 }
-
