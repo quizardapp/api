@@ -7,8 +7,11 @@ import (
 )
 
 type SQLStore struct {
-	db       *sql.DB
-	userRepo *UserRepo
+	db         *sql.DB
+	userRepo   *UserRepo
+	courseRepo *CourseRepo
+	// moduleRepo *ModuleRepo
+	// cardRepo   *CardRepo
 }
 
 // New ...
@@ -27,3 +30,33 @@ func (s *SQLStore) User() store.UserRepo {
 
 	return s.userRepo
 }
+
+func (s *SQLStore) Course() store.CourseRepo {
+	if s.courseRepo != nil {
+		return s.courseRepo
+	}
+
+	s.courseRepo = &CourseRepo{store: s}
+
+	return s.courseRepo
+}
+
+// func (s *SQLStore) Module() store.ModuleRepo {
+// 	if s.moduleRepo != nil {
+// 		return s.moduleRepo
+// 	}
+
+// 	s.moduleRepo = &ModuleRepo{store: s}
+
+// 	return s.moduleRepo
+// }
+
+// func (s *SQLStore) Card() store.CardRepo {
+// 	if s.cardRepo != nil {
+// 		return s.cardRepo
+// 	}
+
+// 	s.userRepo = &CardRepo{store: s}
+
+// 	return s.cardRepo
+// }

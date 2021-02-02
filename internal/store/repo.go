@@ -12,7 +12,8 @@ type UserRepo interface {
 
 type CourseRepo interface {
 	Create(*model.Course) error
-	Find(value string, field string) (*model.Course, error)
+	Find(id string) (*model.Course, error)
+	Read(id string) ([]*model.Course, error)
 	Update(value string, field string, id string) error
 }
 
