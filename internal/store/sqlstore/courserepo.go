@@ -6,10 +6,12 @@ import (
 	"github.com/quizardapp/auth-api/internal/model"
 )
 
+// CourseRepo ...
 type CourseRepo struct {
 	store *SQLStore
 }
 
+// Create ...
 func (cr *CourseRepo) Create(c *model.Course) error {
 
 	if err := c.Validate(); err != nil {
@@ -29,6 +31,7 @@ func (cr *CourseRepo) Create(c *model.Course) error {
 	return nil
 }
 
+// Find ...
 func (cr *CourseRepo) Find(id string) (*model.Course, error) {
 
 	c := model.Course{}
@@ -41,6 +44,7 @@ func (cr *CourseRepo) Find(id string) (*model.Course, error) {
 	return &c, nil
 }
 
+// Read ...
 func (cr *CourseRepo) Read(id string) ([]*model.Course, error) {
 
 	query := fmt.Sprintf(`SELECT * FROM courses WHERE iduser='%s'`, id)
@@ -71,6 +75,7 @@ func (cr *CourseRepo) Read(id string) ([]*model.Course, error) {
 	return courses, nil
 }
 
+// Update ...
 func (cr *CourseRepo) Update(value string, field string, id string) error {
 
 	query := fmt.Sprintf("UPDATE courses SET `%s`='%s' WHERE id='%s'", field, value, id)
@@ -81,6 +86,7 @@ func (cr *CourseRepo) Update(value string, field string, id string) error {
 	return nil
 }
 
+// Delete ...
 func (cr *CourseRepo) Delete(id string) error {
 	query := fmt.Sprintf("DELETE FROM courses WHERE id='%s'", id)
 	if _, err := cr.store.db.Exec(query); err != nil {

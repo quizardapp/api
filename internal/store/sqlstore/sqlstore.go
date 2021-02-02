@@ -6,6 +6,7 @@ import (
 	"github.com/quizardapp/auth-api/internal/store"
 )
 
+// SQLStore ...
 type SQLStore struct {
 	db         *sql.DB
 	userRepo   *UserRepo
@@ -21,6 +22,7 @@ func New(db *sql.DB) *SQLStore {
 	}
 }
 
+// User ...
 func (s *SQLStore) User() store.UserRepo {
 	if s.userRepo != nil {
 		return s.userRepo
@@ -31,6 +33,7 @@ func (s *SQLStore) User() store.UserRepo {
 	return s.userRepo
 }
 
+// Course ...
 func (s *SQLStore) Course() store.CourseRepo {
 	if s.courseRepo != nil {
 		return s.courseRepo
@@ -41,6 +44,7 @@ func (s *SQLStore) Course() store.CourseRepo {
 	return s.courseRepo
 }
 
+// Module ...
 func (s *SQLStore) Module() store.ModuleRepo {
 	if s.moduleRepo != nil {
 		return s.moduleRepo

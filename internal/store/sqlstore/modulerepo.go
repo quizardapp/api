@@ -6,10 +6,12 @@ import (
 	"github.com/quizardapp/auth-api/internal/model"
 )
 
+// ModuleRepo ...
 type ModuleRepo struct {
 	store *SQLStore
 }
 
+// Create ...
 func (mr *ModuleRepo) Create(m *model.Module) error {
 
 	query := fmt.Sprintf(`
@@ -24,6 +26,7 @@ func (mr *ModuleRepo) Create(m *model.Module) error {
 	return nil
 }
 
+// Find ...
 func (mr *ModuleRepo) Find(id string) (*model.Module, error) {
 
 	m := model.Module{}
@@ -36,6 +39,7 @@ func (mr *ModuleRepo) Find(id string) (*model.Module, error) {
 	return &m, nil
 }
 
+// Read ...
 func (mr *ModuleRepo) Read(id string) ([]*model.Module, error) {
 
 	query := fmt.Sprintf(`SELECT * FROM modules WHERE iduser='%s'`, id)
@@ -66,6 +70,7 @@ func (mr *ModuleRepo) Read(id string) ([]*model.Module, error) {
 	return modules, nil
 }
 
+// Update ...
 func (mr *ModuleRepo) Update(value string, field string, id string) error {
 
 	query := fmt.Sprintf("UPDATE modules SET `%s`='%s' WHERE id='%s'", field, value, id)
@@ -77,6 +82,7 @@ func (mr *ModuleRepo) Update(value string, field string, id string) error {
 	return nil
 }
 
+// Delete ...
 func (mr *ModuleRepo) Delete(id string) error {
 	query := fmt.Sprintf("DELETE FROM modules WHERE id='%s'", id)
 	if _, err := mr.store.db.Exec(query); err != nil {
