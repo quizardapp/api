@@ -51,6 +51,12 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc(coursePrefix+"/get", s.authenticate(s.getCourses())).Methods("POST")
 	s.router.HandleFunc(coursePrefix+"/update", s.authenticate(s.updateCourse())).Methods("PUT")
 	s.router.HandleFunc(coursePrefix+"/delete", s.authenticate(s.deleteCourse())).Methods("DELETE")
+
+	modulePrefix := "/module"
+	s.router.HandleFunc(modulePrefix+"/create", s.authenticate(s.createModule())).Methods("POST")
+	s.router.HandleFunc(modulePrefix+"/get", s.authenticate(s.getModules())).Methods("POST")
+	s.router.HandleFunc(modulePrefix+"/update", s.authenticate(s.updateModule())).Methods("PUT")
+	s.router.HandleFunc(modulePrefix+"/delete", s.authenticate(s.deleteModule())).Methods("DELETE")
 }
 
 func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err error) {

@@ -3,6 +3,6 @@ package store
 type Store interface {
 	User() UserRepo
 	Course() CourseRepo
-	// Module() ModuleRepo
+	Module() ModuleRepo
 	// Card() CardRepo
 }

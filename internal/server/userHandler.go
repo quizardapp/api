@@ -88,7 +88,7 @@ func (s *server) login() http.HandlerFunc {
 			return
 		}
 
-		s.store.User().Update(u.RefreshToken, "token", &u.ID)
+		s.store.User().Update(u.RefreshToken, "token", u.ID)
 
 		res := &response{u.RefreshToken, u.AccessToken}
 
@@ -150,7 +150,7 @@ func (s *server) updateUser() http.HandlerFunc {
 			return
 		}
 
-		if err := s.store.User().Update(req.Value, req.Field, &req.ID); err != nil {
+		if err := s.store.User().Update(req.Value, req.Field, req.ID); err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
