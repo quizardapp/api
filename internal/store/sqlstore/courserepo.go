@@ -21,9 +21,6 @@ func (cr *CourseRepo) Create(c *model.Course) error {
 	query := fmt.Sprintf(`
 	INSERT INTO courses (id, name, description, iduser, creation_date) 
 	VALUES ('%s','%s','%s','%s','%s')`, c.ID, c.Name, c.Description, c.UserID, c.CreationDate)
-
-	fmt.Println(query)
-
 	if _, err := cr.store.db.Exec(query); err != nil {
 		return err
 	}

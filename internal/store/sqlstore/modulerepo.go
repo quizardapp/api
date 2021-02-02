@@ -74,7 +74,6 @@ func (mr *ModuleRepo) Read(id string) ([]*model.Module, error) {
 func (mr *ModuleRepo) Update(value string, field string, id string) error {
 
 	query := fmt.Sprintf("UPDATE modules SET `%s`='%s' WHERE id='%s'", field, value, id)
-	fmt.Println(query)
 	if _, err := mr.store.db.Exec(query); err != nil {
 		return err
 	}

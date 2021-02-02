@@ -29,5 +29,7 @@ type ModuleRepo interface {
 type CardRepo interface {
 	Create(*model.Card) error
 	Find(id string) (*model.Card, error)
+	Read(id string) ([]*model.Card, error)
 	Update(value string, field string, id string) error
+	Delete(id string) error
 }

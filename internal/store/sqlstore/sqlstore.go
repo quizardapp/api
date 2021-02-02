@@ -12,7 +12,7 @@ type SQLStore struct {
 	userRepo   *UserRepo
 	courseRepo *CourseRepo
 	moduleRepo *ModuleRepo
-	// cardRepo   *CardRepo
+	cardRepo   *CardRepo
 }
 
 // New ...
@@ -55,12 +55,13 @@ func (s *SQLStore) Module() store.ModuleRepo {
 	return s.moduleRepo
 }
 
-// func (s *SQLStore) Card() store.CardRepo {
-// 	if s.cardRepo != nil {
-// 		return s.cardRepo
-// 	}
+// Card ...
+func (s *SQLStore) Card() store.CardRepo {
+	if s.cardRepo != nil {
+		return s.cardRepo
+	}
 
-// 	s.userRepo = &CardRepo{store: s}
+	s.cardRepo = &CardRepo{store: s}
 
-// 	return s.cardRepo
-// }
+	return s.cardRepo
+}

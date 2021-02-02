@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os/exec"
 	"strings"
@@ -145,7 +144,6 @@ func (s *server) updateUser() http.HandlerFunc {
 		req := &request{}
 
 		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
-			fmt.Println(err)
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}

@@ -11,7 +11,6 @@ type Card struct {
 	ID           string    `json:"id" validate:"required"`
 	Name         string    `json:"name" validate:"required"`
 	Content      string    `json:"content" validate:"required"`
-	UserID       string    `json:"user_id" validate:"required"`
 	ModuleID     string    `json:"module_id" validate:"required"`
 	CreationDate time.Time `json:"creation_date" validate:"required"`
 }
