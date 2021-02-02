@@ -29,11 +29,11 @@ func (cr *CourseRepo) Create(c *model.Course) error {
 	return nil
 }
 
-func (cr *CourseRepo) Find(id *string) (*model.Course, error) {
+func (cr *CourseRepo) Find(id string) (*model.Course, error) {
 
 	c := model.Course{}
 
-	query := fmt.Sprintf(`SELECT * FROM courses WHERE id='%s'`, *id)
+	query := fmt.Sprintf(`SELECT * FROM courses WHERE id='%s'`, id)
 	if err := cr.store.db.QueryRow(query).Scan(&c.ID, &c.Name, &c.Description, &c.UserID, &c.CreationDate); err != nil {
 		return nil, err
 	}
@@ -41,9 +41,9 @@ func (cr *CourseRepo) Find(id *string) (*model.Course, error) {
 	return &c, nil
 }
 
-func (cr *CourseRepo) Read(id *string) ([]*model.Course, error) {
+func (cr *CourseRepo) Read(id string) ([]*model.Course, error) {
 
-	query := fmt.Sprintf(`SELECT * FROM courses WHERE iduser='%s'`, *id)
+	query := fmt.Sprintf(`SELECT * FROM courses WHERE iduser='%s'`, id)
 	rows, err := cr.store.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (cr *CourseRepo) Read(id *string) ([]*model.Course, error) {
 	defer rows.Close()
 
 	numOfRows := 0
-	query = fmt.Sprintf(`SELECT count(id) FROM courses WHERE iduser='%s'`, *id)
+	query = fmt.Sprintf(`SELECT count(id) FROM courses WHERE iduser='%s'`, id)
 	if err := cr.store.db.QueryRow(query).Scan(&numOfRows); err != nil {
 		return nil, err
 	}
@@ -71,9 +71,9 @@ func (cr *CourseRepo) Read(id *string) ([]*model.Course, error) {
 	return courses, nil
 }
 
-func (cr *CourseRepo) Update(value *string, field *string, id *string) error {
+func (cr *CourseRepo) Update(value string, field string, id string) error {
 
-	query := fmt.Sprintf("UPDATE courses SET `%s`='%s' WHERE id='%s'", *field, *value, *id)
+	query := fmt.Sprintf("UPDATE courses SET `%s`='%s' WHERE id='%s'", field, value, id)
 	if _, err := cr.store.db.Exec(query); err != nil {
 		return err
 	}
@@ -81,8 +81,8 @@ func (cr *CourseRepo) Update(value *string, field *string, id *string) error {
 	return nil
 }
 
-func (cr *CourseRepo) Delete(id *string) error {
-	query := fmt.Sprintf("DELETE FROM courses WHERE id='%s'", *id)
+func (cr *CourseRepo) Delete(id string) error {
+	query := fmt.Sprintf("DELETE FROM courses WHERE id='%s'", id)
 	if _, err := cr.store.db.Exec(query); err != nil {
 		return err
 	}

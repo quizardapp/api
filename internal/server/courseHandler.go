@@ -62,7 +62,7 @@ func (s *server) getCourses() http.HandlerFunc {
 			return
 		}
 
-		courses, err := s.store.Course().Read(&req.UserID)
+		courses, err := s.store.Course().Read(req.UserID)
 		if err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
@@ -89,7 +89,7 @@ func (s *server) updateCourse() http.HandlerFunc {
 			return
 		}
 
-		if err := s.store.Course().Update(&req.Value, &req.Field, &req.CourseID); err != nil {
+		if err := s.store.Course().Update(req.Value, req.Field, req.CourseID); err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
@@ -112,7 +112,7 @@ func (s *server) deleteCourse() http.HandlerFunc {
 			return
 		}
 
-		if err := s.store.Course().Delete(&req.ID); err != nil {
+		if err := s.store.Course().Delete(req.ID); err != nil {
 			s.error(w, r, http.StatusInternalServerError, err)
 			return
 		}

@@ -69,7 +69,7 @@ func (ur *UserRepo) Find(value string, field string) (*model.User, error) {
 }
 
 // Update ...
-func (ur *UserRepo) Update(value string, field string, id string) error {
+func (ur *UserRepo) Update(value string, field string, id *string) error {
 
 	if field == "password" {
 		byteValue, err := bcrypt.GenerateFromPassword([]byte(value), bcrypt.DefaultCost)

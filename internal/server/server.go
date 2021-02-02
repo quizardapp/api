@@ -43,14 +43,14 @@ func (s *server) configureRouter() {
 	s.router.HandleFunc(userPrefix+"/register", s.register()).Methods("POST")
 	s.router.HandleFunc(userPrefix+"/login", s.login()).Methods("POST")
 	s.router.HandleFunc(userPrefix+"/token", s.updateAccessToken()).Methods("POST")
-	s.router.HandleFunc(userPrefix+"/update", s.authenticate(s.updateUser())).Methods("UPDATE")
+	s.router.HandleFunc(userPrefix+"/update", s.authenticate(s.updateUser())).Methods("PUT")
 	s.router.HandleFunc(userPrefix+"/get", s.authenticate(s.getUser())).Methods("POST")
 
 	coursePrefix := "/course"
 	s.router.HandleFunc(coursePrefix+"/create", s.authenticate(s.createCourse())).Methods("POST")
 	s.router.HandleFunc(coursePrefix+"/get", s.authenticate(s.getCourses())).Methods("POST")
-	s.router.HandleFunc(coursePrefix+"/update",s.authenticate(s.updateCourse())).Methods("PUT")
-	s.router.HandleFunc(coursePrefix+"/delete",s.authenticate(s.deleteCourse())).Methods("DELETE")
+	s.router.HandleFunc(coursePrefix+"/update", s.authenticate(s.updateCourse())).Methods("PUT")
+	s.router.HandleFunc(coursePrefix+"/delete", s.authenticate(s.deleteCourse())).Methods("DELETE")
 }
 
 func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err error) {

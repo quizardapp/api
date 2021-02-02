@@ -7,15 +7,15 @@ import (
 type UserRepo interface {
 	Create(*model.User) error
 	Find(value string, field string) (*model.User, error)
-	Update(value string, field string, id string) error
+	Update(value string, field string, id *string) error
 }
 
 type CourseRepo interface {
 	Create(*model.Course) error
-	Find(id *string) (*model.Course, error)
-	Read(id *string) ([]*model.Course, error)
-	Update(value *string, field *string, id *string) error
-	Delete(id *string) error
+	Find(id string) (*model.Course, error)
+	Read(id string) ([]*model.Course, error)
+	Update(value string, field string, id string) error
+	Delete(id string) error
 }
 
 type ModuleRepo interface {
