@@ -15,6 +15,7 @@ type CourseRepo interface {
 	Find(id *string) (*model.Course, error)
 	Read(id *string) ([]*model.Course, error)
 	Update(value *string, field *string, id *string) error
+	Delete(id *string) error
 }
 
 type ModuleRepo interface {

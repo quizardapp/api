@@ -81,8 +81,8 @@ func (cr *CourseRepo) Update(value *string, field *string, id *string) error {
 	return nil
 }
 
-func (cr *CourseRepo) Delete(id string) error {
-	query := fmt.Sprintf(`DELETE * FROM courses WHERE id='%s' `, id)
+func (cr *CourseRepo) Delete(id *string) error {
+	query := fmt.Sprintf("DELETE FROM courses WHERE id='%s'", *id)
 	if _, err := cr.store.db.Exec(query); err != nil {
 		return err
 	}

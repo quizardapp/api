@@ -99,5 +99,24 @@ func (s *server) updateCourse() http.HandlerFunc {
 }
 
 func (s *server) deleteCourse() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
+
+	type request struct {
+		ID          string `json:"id"`
+		AccessToken string `json:"access_token"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		if err := s.store.Course().Delete(&req.ID); err != nil {
+			s.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		s.respond(w, r, http.StatusOK, nil)
+	}
 }
