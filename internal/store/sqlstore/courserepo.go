@@ -73,7 +73,7 @@ func (cr *CourseRepo) Read(id *string) ([]*model.Course, error) {
 
 func (cr *CourseRepo) Update(value *string, field *string, id *string) error {
 
-	query := fmt.Sprintf("UPDATE users SET `%s`='%s' WHERE id='%s'", field, value, id)
+	query := fmt.Sprintf("UPDATE courses SET `%s`='%s' WHERE id='%s'", *field, *value, *id)
 	if _, err := cr.store.db.Exec(query); err != nil {
 		return err
 	}

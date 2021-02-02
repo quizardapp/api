@@ -62,7 +62,7 @@ func (s *server) getCourses() http.HandlerFunc {
 			return
 		}
 
-		courses, err := s.store.Course().Read(req.UserID)
+		courses, err := s.store.Course().Read(&req.UserID)
 		if err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
@@ -74,7 +74,28 @@ func (s *server) getCourses() http.HandlerFunc {
 }
 
 func (s *server) updateCourse() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {}
+
+	type request struct {
+		CourseID    string `json:"course_id"`
+		AccessToken string `json:"access_token"`
+		Value       string `json:"value"`
+		Field       string `json:"field"`
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		req := &request{}
+		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		if err := s.store.Course().Update(&req.Value, &req.Field, &req.CourseID); err != nil {
+			s.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		s.respond(w, r, http.StatusOK, nil)
+	}
 }
 
 func (s *server) deleteCourse() http.HandlerFunc {

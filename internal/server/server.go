@@ -49,7 +49,7 @@ func (s *server) configureRouter() {
 	coursePrefix := "/course"
 	s.router.HandleFunc(coursePrefix+"/create", s.authenticate(s.createCourse())).Methods("POST")
 	s.router.HandleFunc(coursePrefix+"/get", s.authenticate(s.getCourses())).Methods("POST")
-	s.router.HandleFunc(coursePrefix+"/update",s.authenticate(s.updateCourse())).Methods("UPDATE")
+	s.router.HandleFunc(coursePrefix+"/update",s.authenticate(s.updateCourse())).Methods("PUT")
 	s.router.HandleFunc(coursePrefix+"/delete",s.authenticate(s.deleteCourse())).Methods("DELETE")
 }
 
