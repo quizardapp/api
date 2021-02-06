@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"os"
 
 	"github.com/quizardapp/auth-api/internal/store"
 	"github.com/sirupsen/logrus"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -37,32 +39,43 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.router.ServeHTTP(w, r)
 }
 
+func (s *server) configureCors() {
+	allowedOrigins := handlers.AllowedOrigins([]string{os.Getenv("ALLOWED_ORIGINS")})
+	allowedMethods := handlers.AllowedMethods([]string{http.MethodOptions, http.MethodPost, http.MethodGet, http.MethodPut, http.MethodDelete})
+	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
+
+	s.router.Use(handlers.CORS(allowedHeaders, allowedMethods, allowedOrigins))
+}
+
 func (s *server) configureRouter() {
 
-	const userPrefix = "/user"
-	s.router.HandleFunc(userPrefix+"/register", s.register()).Methods("POST")
-	s.router.HandleFunc(userPrefix+"/login", s.login()).Methods("POST")
-	s.router.HandleFunc(userPrefix+"/token", s.updateAccessToken()).Methods("POST")
-	s.router.HandleFunc(userPrefix+"/update", s.authenticate(s.updateUser())).Methods("PUT")
-	s.router.HandleFunc(userPrefix+"/get", s.authenticate(s.getUser())).Methods("POST")
+	s.configureCors()
+	s.router.Use(s.setContentType)
 
-	const coursePrefix = "/course"
-	s.router.HandleFunc(coursePrefix+"/create", s.authenticate(s.createCourse())).Methods("POST")
-	s.router.HandleFunc(coursePrefix+"/get", s.authenticate(s.getCourses())).Methods("POST")
-	s.router.HandleFunc(coursePrefix+"/update", s.authenticate(s.updateCourse())).Methods("PUT")
-	s.router.HandleFunc(coursePrefix+"/delete", s.authenticate(s.deleteCourse())).Methods("DELETE")
+	userRouter := s.router.PathPrefix("/user").Subrouter()
+	userRouter.HandleFunc("/register", s.register()).Methods(http.MethodPost, http.MethodOptions)
+	userRouter.HandleFunc("/login", s.login()).Methods(http.MethodPost, http.MethodOptions)
+	userRouter.HandleFunc("/token", s.updateAccessToken()).Methods("POST")
+	userRouter.HandleFunc("/update", s.authenticate(s.updateUser())).Methods("PUT")
+	userRouter.HandleFunc("/get", s.authenticate(s.getUser())).Methods("POST")
 
-	const modulePrefix = "/module"
-	s.router.HandleFunc(modulePrefix+"/create", s.authenticate(s.createModule())).Methods("POST")
-	s.router.HandleFunc(modulePrefix+"/get", s.authenticate(s.getModules())).Methods("POST")
-	s.router.HandleFunc(modulePrefix+"/update", s.authenticate(s.updateModule())).Methods("PUT")
-	s.router.HandleFunc(modulePrefix+"/delete", s.authenticate(s.deleteModule())).Methods("DELETE")
+	courseRouter := s.router.PathPrefix("/course").Subrouter()
+	courseRouter.HandleFunc("/create", s.authenticate(s.createCourse())).Methods("POST")
+	courseRouter.HandleFunc("/get", s.authenticate(s.getCourses())).Methods("POST")
+	courseRouter.HandleFunc("/update", s.authenticate(s.updateCourse())).Methods("PUT")
+	courseRouter.HandleFunc("/delete", s.authenticate(s.deleteCourse())).Methods("DELETE")
 
-	const cardPrefix = "/card"
-	s.router.HandleFunc(cardPrefix+"/create", s.authenticate(s.createCard())).Methods("POST")
-	s.router.HandleFunc(cardPrefix+"/get", s.authenticate(s.getCards())).Methods("POST")
-	s.router.HandleFunc(cardPrefix+"/update", s.authenticate(s.updateCard())).Methods("PUT")
-	s.router.HandleFunc(cardPrefix+"/delete", s.authenticate(s.deleteCard())).Methods("DELETE")
+	moduleRouter := s.router.PathPrefix("/module").Subrouter()
+	moduleRouter.HandleFunc("/create", s.authenticate(s.createModule())).Methods("POST")
+	moduleRouter.HandleFunc("/get", s.authenticate(s.getModules())).Methods("POST")
+	moduleRouter.HandleFunc("/update", s.authenticate(s.updateModule())).Methods("PUT")
+	moduleRouter.HandleFunc("/delete", s.authenticate(s.deleteModule())).Methods("DELETE")
+
+	cardRouter := s.router.PathPrefix("/card").Subrouter()
+	cardRouter.HandleFunc("/get", s.authenticate(s.getCards())).Methods("POST")
+	cardRouter.HandleFunc("/create", s.authenticate(s.createCard())).Methods("POST")
+	cardRouter.HandleFunc("/update", s.authenticate(s.updateCard())).Methods("PUT")
+	cardRouter.HandleFunc("/delete", s.authenticate(s.deleteCard())).Methods("DELETE")
 }
 
 func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err error) {
@@ -71,6 +84,7 @@ func (s *server) error(w http.ResponseWriter, r *http.Request, code int, err err
 
 func (s *server) respond(w http.ResponseWriter, r *http.Request, code int, data interface{}) {
 	w.WriteHeader(code)
+
 	if data != nil {
 		json.NewEncoder(w).Encode(data)
 	}
