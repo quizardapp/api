@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"os"
 
 	"github.com/quizardapp/auth-api/internal/store"
 	"github.com/sirupsen/logrus"
@@ -40,7 +39,7 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) configureCors() {
-	allowedOrigins := handlers.AllowedOrigins([]string{os.Getenv("ALLOWED_ORIGINS")})
+	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3000"})
 	allowedMethods := handlers.AllowedMethods([]string{http.MethodOptions, http.MethodPost, http.MethodGet, http.MethodPut, http.MethodDelete})
 	allowedHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
 
